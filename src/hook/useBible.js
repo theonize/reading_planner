@@ -4,7 +4,7 @@ import NET from '../lib/net.json'
 
 export default function useBible(version='NET') {
   const [queue, setQueue] = useState([])
-  const [totalVerses, setTotalVerses] = useState(0)
+  const [totalVerses, setTotalVerses] = useState(31102)
   
   
   const section = (day, numVerses) => {
@@ -23,8 +23,8 @@ export default function useBible(version='NET') {
       chapterLength = +chapterLength
       
       const chapterEnd = chapterStart + chapterLength
-
-      console.log({book,chapter,chapterLength,chapterStart,chapterEnd})
+      
+      // console.log({book,chapter,chapterLength,chapterStart,chapterEnd})
       
       if (!start && (startVerse <= chapterEnd)) {
         start = { book, chapter, verse: startVerse - chapterStart + 1 }
