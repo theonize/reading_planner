@@ -1,10 +1,15 @@
 import {useEffect, useState} from 'react'
 import NET from '../lib/net.json'
+import Order from '../lib/order'
+import useLocalStorage from './useLocalStorage'
 
 
 export default function useBible(version='NET') {
+  const [order, setOrder] = useLocalStorage('book-order', Order.Traditional)
+  const [totalVerses, setTotalVerses] = useLocalStorage('total-verses', 31102)
+  
+  const [bible, setBible] = useState(NET)
   const [queue, setQueue] = useState([])
-  const [totalVerses, setTotalVerses] = useState(31102)
   
   
   const section = (day, numVerses) => {
@@ -15,7 +20,6 @@ export default function useBible(version='NET') {
     let end, start
     
     
-    console.log(day, numVerses, startVerse, endVerse)
     for (let chapterInfo of queue) {
       let [book,chapter,chapterLength] = chapterInfo.split('|')
       
@@ -48,9 +52,12 @@ export default function useBible(version='NET') {
   
   useEffect(() => {
     const Q = []
+    
     let newTotal = 0
     
-    for (let book in NET) {
+    
+    for (let book of order) {
+      console.log(book)
       for (let chapter in NET[book]) {
         const chapterLength = NET[book][chapter].length
         Q.push(`${book}|${chapter}|${chapterLength}`)
@@ -61,10 +68,12 @@ export default function useBible(version='NET') {
     setTotalVerses(newTotal)
     
     setQueue(Q)
-  }, [version])
+  }, [order, version])
   
   
   return {
+    order,
+    setOrder,
     section,
     sectionSize,
   }
